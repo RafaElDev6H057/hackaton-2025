@@ -97,41 +97,21 @@
               class="w-10 h-10 rounded-md flex items-center justify-center mr-3"
               :class="categoryColors[event.category]"
             >
-              <svg
-                class="w-5 h-5 text-white"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  v-if="event.category === 'concierto'"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
-                />
-                <path
-                  v-if="event.category === 'deporte'"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"
-                />
-                <path
-                  v-if="event.category === 'cultural'"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                />
-                <path
-                  v-if="event.category === 'gastronomia'"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"
-                />
-              </svg>
+              <div v-if="event.category === 'concierto'">
+                <MusicIcon />
+              </div>
+
+              <div v-if="event.category === 'deporte'">
+                <SportIcon />
+              </div>
+
+              <div v-if="event.category === 'cultural'">
+                <CultureIcon />
+              </div>
+
+              <div v-if="event.category === 'gastronomia'">
+                <FoodIcon />
+              </div>
             </div>
 
             <div class="flex-1">
@@ -179,7 +159,7 @@
         </div>
       </div>
 
-      <div class="p-3 bg-gray-50 border-t border-gray-200">
+      <!-- <div class="p-3 bg-gray-50 border-t border-gray-200">
         <button
           @click="addSampleEvent"
           class="w-full py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg flex items-center justify-center"
@@ -199,7 +179,7 @@
           </svg>
           Añadir Evento de Prueba
         </button>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -207,6 +187,7 @@
 <script setup>
 // eslint-disable-next-line
 import { ref, onMounted, defineEmits, defineProps, watch } from "vue";
+import axios from "axios";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -217,6 +198,10 @@ import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
 // Icono para la ubicación del usuario
 import userLocationIcon from "../assets/user-location.png";
+import CultureIcon from "./icons/CultureIcon.vue";
+import FoodIcon from "./icons/FoodIcon.vue";
+import MusicIcon from "./icons/MusicIcon.vue";
+import SportIcon from "./icons/SportIcon.vue";
 
 // Configuración de iconos
 delete L.Icon.Default.prototype._getIconUrl;
@@ -229,9 +214,10 @@ L.Icon.Default.mergeOptions({
 const props = defineProps({
   initialPosition: {
     type: Object,
-    default: () => ({ lat: 40.416775, lng: -3.70379 }),
+    default: () => ({ lat: 22.7623, lng: -102.5357 }),
   },
 });
+// 22.762395711851127, -102.53574731095128
 
 const emit = defineEmits([
   "location-selected",
@@ -256,52 +242,30 @@ const categoryColors = {
 };
 
 // Datos de prueba para eventos
-const events = ref([
-  {
-    id: 1,
-    title: "Concierto de Jazz en el Parque",
-    date: "15 Oct 2023",
-    time: "19:00",
-    location: "Parque del Retiro, Madrid",
-    category: "concierto",
-    coordinates: { lat: 40.4145, lng: -3.6837 },
-    description:
-      "Disfruta de una noche de jazz con la famosa banda 'Madrid Jazz Quartet' en el icónico parque madrileño.",
-  },
-  {
-    id: 2,
-    title: "Partido de Fútbol: Real Madrid vs Barcelona",
-    date: "22 Oct 2023",
-    time: "21:00",
-    location: "Estadio Santiago Bernabéu",
-    category: "deporte",
-    coordinates: { lat: 40.4531, lng: -3.6883 },
-    description:
-      "El clásico español en el estadio Bernabéu. ¡No te pierdas este emocionante partido!",
-  },
-  {
-    id: 3,
-    title: "Exposición de Arte Moderno",
-    date: "18 Oct 2023",
-    time: "10:00 - 20:00",
-    location: "Museo Reina Sofía",
-    category: "cultural",
-    coordinates: { lat: 40.4078, lng: -3.6943 },
-    description:
-      "Explora las obras más destacadas del arte moderno español e internacional.",
-  },
-  {
-    id: 4,
-    title: "Feria Gastronómica Internacional",
-    date: "25-28 Oct 2023",
-    time: "12:00 - 22:00",
-    location: "Matadero Madrid",
-    category: "gastronomia",
-    coordinates: { lat: 40.392, lng: -3.6985 },
-    description:
-      "Degustación de platos de más de 30 países en el corazón de Madrid.",
-  },
-]);
+const events = ref([]);
+
+const fetchEvents = async () => {
+  try {
+    const response = await axios.get("http://127.0.0.1:8000/eventos");
+    // Mapear los datos del backend al formato esperado por el mapa
+    events.value = response.data.map((ev) => ({
+      id: ev.id,
+      title: ev.titulo,
+      date: ev.fecha,
+      time: ev.hora,
+      location: ev.ubicacion,
+      category: ev.categoria,
+      coordinates: {
+        lat: Number(ev.latitud),
+        lng: Number(ev.longitud),
+      },
+      description: ev.descripcion,
+    }));
+    addEventsToMap();
+  } catch (error) {
+    console.error("Error al obtener eventos del backend:", error);
+  }
+};
 
 onMounted(() => {
   if (!mapElement.value) return;
@@ -318,11 +282,11 @@ onMounted(() => {
       '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   }).addTo(map.value);
 
-  // Añadir eventos al mapa
-  addEventsToMap();
+  // Obtener eventos reales del backend
+  fetchEvents();
 
   // Intentar geolocalizar al usuario al cargar
-  locateUser();
+  // locateUser();
 
   // Evento de clic en el mapa
   map.value.on("click", async (e) => {
@@ -360,6 +324,68 @@ onMounted(() => {
   });
 });
 
+const categorySVGs = {
+  concierto: `<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+  >
+    <g fill="none">
+      <path
+        d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"
+      />
+      <path
+        fill="#fff"
+        d="M21 5.18V17a4 4 0 1 1-2-3.465V9.181L9 10.847V18q0 .09-.015.174A3.5 3.5 0 1 1 7 15.337v-8.49a2 2 0 0 1 1.671-1.973l10-1.666A2 2 0 0 1 21 5.18M5.5 17a1.5 1.5 0 1 0 0 3a1.5 1.5 0 0 0 0-3M17 15a2 2 0 1 0 0 4a2 2 0 0 0 0-4m2-9.82L9 6.847V8.82l10-1.667z"
+      />
+    </g>
+  </svg>`,
+  deporte: `<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 48 48"
+  >
+    <g fill="none" stroke="#fff" stroke-width="4">
+      <path d="M36 15a5 5 0 1 0 0-10a5 5 0 0 0 0 10Z" />
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="m12 16.77l8.003-2.772L31 19.247l-10.997 8.197L31 34.684l-6.992 9.314M35.32 21.643l2.682 1.459L44 17.466M16.849 31.545l-2.97 3.912l-9.875 5.54"
+      />
+    </g>
+  </svg>`,
+  cultural: `<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 48 48"
+  >
+    <path
+      fill="#fff"
+      fill-rule="evenodd"
+      d="M16.445 6.168a1 1 0 0 1 1.11 0l6 4A1 1 0 0 1 24 11v8a1 1 0 0 1-1 1H11a1 1 0 0 1-1-1v-8a1 1 0 0 1 .445-.832zM16 18h2v-4h-2zm4 0v-5a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v5h-2v-6.465l5-3.333l5 3.333V18zm14.496-5.868a1 1 0 0 0-.992 0l-7 4A1 1 0 0 0 26 17v10a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V17a1 1 0 0 0-.504-.868zM37 26h3v-8.42l-6-3.428l-6 3.428V26h3v-6a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1zm-2 0v-5h-2v5zm-11.553 2.106l-8-4a1 1 0 0 0-.894 0l-8 4A1 1 0 0 0 6 29v12a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V29a1 1 0 0 0-.553-.894M16 34v6h-2v-6zm2-1v7h4V29.618l-7-3.5l-7 3.5V40h4v-7a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1"
+      clip-rule="evenodd"
+    />
+  </svg>`,
+  gastronomia: `<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 16 16"
+  >
+    <path
+      fill="#fff"
+      d="M1.338 1.961C1.495 1.362 2.041 1 2.615 1c.354 0 .676.133.921.35a1.5 1.5 0 0 1 1.928 0A1.38 1.38 0 0 1 6.385 1c.574 0 1.12.362 1.277.961C7.812 2.533 8 3.455 8 4.5a3.5 3.5 0 0 1-1.595 2.936c-.271.177-.405.405-.405.6v.396q0 .034.004.066c.034.248.157 1.169.272 2.124c.113.937.224 1.959.224 2.378a2 2 0 1 1-4 0c0-.42.111-1.44.224-2.378c.115-.955.238-1.876.272-2.124L3 8.432v-.396c0-.195-.134-.423-.405-.6A3.5 3.5 0 0 1 1 4.5c0-1.045.188-1.967.338-2.539M6 5a.5.5 0 0 1-1 0V2.5a.5.5 0 0 0-1 0V5a.5.5 0 0 1-1 0V2.385A.385.385 0 0 0 2.615 2c-.166 0-.28.099-.31.215A9.2 9.2 0 0 0 2 4.5a2.5 2.5 0 0 0 1.14 2.098c.439.285.86.786.86 1.438v.396q0 .1-.013.2c-.034.246-.156 1.161-.27 2.11c-.116.965-.217 1.914-.217 2.258a1 1 0 1 0 2 0c0-.344-.1-1.293-.217-2.259c-.114-.948-.236-1.863-.27-2.11A2 2 0 0 1 5 8.433v-.396c0-.652.421-1.153.86-1.438A2.5 2.5 0 0 0 7 4.5c0-.932-.168-1.764-.305-2.285C6.665 2.1 6.55 2 6.385 2A.385.385 0 0 0 6 2.385zm3 .5A4.5 4.5 0 0 1 13.5 1a.5.5 0 0 1 .5.5v5.973l.019.177a261 261 0 0 1 .229 2.24c.123 1.256.252 2.664.252 3.11a2 2 0 1 1-4 0c0-.446.129-1.854.252-3.11c.063-.637.126-1.247.173-1.699l.02-.191H10a1 1 0 0 1-1-1zm2.997 2.053l-.021.202a386 386 0 0 0-.228 2.233c-.127 1.287-.248 2.63-.248 3.012a1 1 0 1 0 2 0c0-.383-.121-1.725-.248-3.012a315 315 0 0 0-.228-2.233l-.021-.201L13 7.5V2.035A3.5 3.5 0 0 0 10 5.5V7h1.5a.5.5 0 0 1 .497.553"
+    />
+  </svg>`,
+  otros: `<svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" />
+  </svg>`,
+};
+
 // Función para añadir eventos al mapa
 const addEventsToMap = () => {
   // Limpiar marcadores existentes
@@ -376,12 +402,12 @@ const addEventsToMap = () => {
       html: `
         <div class="relative">
           <div class="w-8 h-8 rounded-full flex items-center justify-center shadow-lg ${
-            categoryColors[event.category]
+            categoryColors[event.category] || "bg-purple-500"
           }">
             <div class="w-4 h-4 bg-white rounded-full"></div>
           </div>
           <div class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-3 h-3 ${
-            categoryColors[event.category]
+            categoryColors[event.category] || "bg-purple-500"
           } rotate-45"></div>
         </div>
       `,
@@ -403,7 +429,7 @@ const addEventsToMap = () => {
       <div class="event-popup min-w-[250px]">
         <div class="flex items-start">
           <div class="w-10 h-10 rounded-md flex items-center justify-center mr-3 ${
-            categoryColors[event.category]
+            categoryColors[event.category] || "bg-purple-500"
           }">
             <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
@@ -458,28 +484,29 @@ const flyToEvent = (event) => {
   if (marker) {
     marker.openPopup();
   }
+  showEventsPanel.value = false;
 };
 
 // Añadir evento de prueba
-const addSampleEvent = () => {
-  const newEvent = {
-    id: events.value.length + 1,
-    title: `Evento de Prueba ${events.value.length + 1}`,
-    date: "30 Oct 2023",
-    time: "18:00",
-    location: "Nueva ubicación",
-    category: "otros",
-    coordinates: {
-      lat: props.initialPosition.lat + (Math.random() - 0.5) * 0.1,
-      lng: props.initialPosition.lng + (Math.random() - 0.5) * 0.1,
-    },
-    description: "Este es un evento de prueba añadido desde el panel",
-  };
+// const addSampleEvent = () => {
+//   const newEvent = {
+//     id: events.value.length + 1,
+//     title: `Evento de Prueba ${events.value.length + 1}`,
+//     date: "30 Oct 2023",
+//     time: "18:00",
+//     location: "Nueva ubicación",
+//     category: "otros",
+//     coordinates: {
+//       lat: props.initialPosition.lat + (Math.random() - 0.5) * 0.1,
+//       lng: props.initialPosition.lng + (Math.random() - 0.5) * 0.1,
+//     },
+//     description: "Este es un evento de prueba añadido desde el panel",
+//   };
 
-  events.value.push(newEvent);
-  addEventsToMap();
-  flyToEvent(newEvent);
-};
+//   events.value.push(newEvent);
+//   addEventsToMap();
+//   flyToEvent(newEvent);
+// };
 
 // Mostrar/ocultar panel de eventos
 const toggleEventsPanel = () => {
@@ -514,6 +541,7 @@ const locateUser = () => {
 
         // Centrar el mapa en la ubicación del usuario
         map.value.setView([lat, lng], 15);
+        map.marker([lat, lng]);
 
         // Obtener dirección de la ubicación
         try {

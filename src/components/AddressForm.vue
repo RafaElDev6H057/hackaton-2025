@@ -1,15 +1,15 @@
 <template>
   <div class="max-w-4xl mx-auto">
     <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-      <div class="p-6 border-b border-gray-200">
+      <!-- <div class="p-6 border-b border-gray-200">
         <h2 class="text-xl font-bold text-gray-800">Formulario de Dirección</h2>
         <p class="text-gray-600 mt-1">
           Selecciona una ubicación en el mapa o usa tu ubicación actual
         </p>
-      </div>
+      </div> -->
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
-        <div class="lg:col-span-2">
+      <div class="p-6 w-full">
+        <div class="lg:col-span-2 w-full">
           <LeafletMap
             :initial-position="initialPosition"
             @location-selected="handleLocationSelected"
@@ -160,7 +160,7 @@
           </div>
         </div>
 
-        <div>
+        <!-- <div>
           <label class="block text-sm font-medium text-gray-700 mb-1"
             >Dirección</label
           >
@@ -238,7 +238,7 @@
           class="w-full py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors mt-4"
         >
           Guardar Dirección
-        </button>
+        </button> -->
       </div>
     </div>
 
@@ -281,10 +281,10 @@ const categoryColors = {
 
 // Posición inicial (Madrid)
 const initialPosition = ref({
-  lat: 40.416775,
-  lng: -3.70379,
+  lat: 22.762395711851127,
+  lng: -102.53574731095128,
 });
-
+// 22.762395711851127, -102.53574731095128
 // Datos del formulario
 const formData = ref({
   address: "",

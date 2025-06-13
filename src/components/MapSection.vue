@@ -14,7 +14,9 @@ const mapContainer = ref<HTMLElement>();
           alt="Mapa de experiencias"
         />
         <h2 id="mapaTitle">Mapa de Experiencias</h2>
-        <p>Descubre lugares cercanos y eventos disponibles en tu área.</p>
+        <p class="mb-0">
+          Descubre lugares cercanos y eventos disponibles en tu área.
+        </p>
       </div>
 
       <div class="max-w-6xl mx-auto" ref="mapContainer">

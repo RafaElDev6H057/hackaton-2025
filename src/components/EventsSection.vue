@@ -1,7 +1,8 @@
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed } from "vue";
+import axios from "axios";
 import { useEvents } from "../composables/useEvents";
-import LeafletMap from "./LeafletMap.vue"; // importa el mapa
+import LeafletMap from "./LeafletMap.vue";
 
 const { events, addEvent, eventFilter, filteredEvents, renderCalendar } =
   useEvents();
@@ -20,6 +21,7 @@ const eventForm = ref({
 });
 
 const formMessage = ref("");
+const isSubmitting = ref(false);
 
 const handleLocationSelected = (location) => {
   eventForm.value.location = location.address;
@@ -27,7 +29,7 @@ const handleLocationSelected = (location) => {
   eventForm.value.coordinates.lng = location.coordinates.lng;
 };
 
-const submitEvent = () => {
+const submitEvent = async () => {
   formMessage.value = "";
 
   if (
@@ -41,23 +43,46 @@ const submitEvent = () => {
     return;
   }
 
-  addEvent(eventForm.value);
-
-  // Reset form
-  eventForm.value = {
-    title: "",
-    date: "",
-    time: "",
-    location: "",
-    category: "",
-    description: "",
-    coordinates: {
-      lat: "",
-      lng: "",
-    },
+  // Construir el objeto para el backend
+  const payload = {
+    titulo: eventForm.value.title,
+    fecha: eventForm.value.date,
+    hora: eventForm.value.time,
+    ubicacion: eventForm.value.location,
+    categoria: eventForm.value.category,
+    descripcion: eventForm.value.description,
+    latitud: Number(eventForm.value.coordinates.lat),
+    longitud: Number(eventForm.value.coordinates.lng),
   };
 
-  formMessage.value = "Evento publicado con éxito. Gracias por contribuir.";
+  isSubmitting.value = true;
+  try {
+    // Cambia la URL por la de tu backend real
+    await axios.post("http://127.0.0.1:8000/eventos", payload);
+    formMessage.value = "Evento publicado con éxito. Gracias por contribuir.";
+
+    // Opcional: agrega el evento localmente
+    addEvent(eventForm.value);
+
+    // Reset form
+    eventForm.value = {
+      title: "",
+      date: "",
+      time: "",
+      location: "",
+      category: "",
+      description: "",
+      coordinates: {
+        lat: "",
+        lng: "",
+      },
+    };
+  } catch (error) {
+    formMessage.value =
+      "Hubo un error al publicar el evento. Intenta de nuevo.";
+  } finally {
+    isSubmitting.value = false;
+  }
 };
 
 const calendarData = computed(() => renderCalendar());
@@ -225,11 +250,11 @@ const calendarData = computed(() => renderCalendar());
                 class="w-full px-4 py-2 border border-gray-300 rounded-lg text-base"
               >
                 <option value="" disabled>Selecciona categoría</option>
-                <option value="Cultural">Cultural</option>
-                <option value="Música">Música</option>
-                <option value="Arte">Arte</option>
-                <option value="Mercado">Mercado</option>
-                <option value="Otro">Otro</option>
+                <option value="concierto">Concierto</option>
+                <option value="deporte">Deporte</option>
+                <option value="cultural">Cultural</option>
+                <option value="gastronomia">Gastronomia</option>
+                <option value="otro">Otro</option>
               </select>
             </div>
 
@@ -268,7 +293,10 @@ const calendarData = computed(() => renderCalendar());
           </label>
           <LeafletMap
             style="height: 400px; width: 100%; border-radius: 12px"
-            :initial-position="{ lat: 40.416775, lng: -3.70379 }"
+            :initial-position="{
+              lat: 22.762395711851127,
+              lng: -102.53574731095128,
+            }"
             @location-selected="handleLocationSelected"
           />
         </div>
