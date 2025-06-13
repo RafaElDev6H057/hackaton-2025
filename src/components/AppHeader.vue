@@ -1,14 +1,14 @@
 <script setup lang="ts">
 defineEmits<{
-  toggleSidebar: []
-}>()
+  toggleSidebar: [];
+}>();
 </script>
 
 <template>
   <header class="header">
     <nav class="nav">
       <div class="nav-left">
-        <button 
+        <button
           class="hamburger-btn"
           @click="$emit('toggleSidebar')"
           aria-label="Abrir menú"
@@ -17,10 +17,14 @@ defineEmits<{
           <span></span>
           <span></span>
         </button>
-        
+
         <div class="logo">
-          <img src="https://cdn-icons-png.flaticon.com/512/3212/3212567.png" alt="Logo NearNow" />
-          <span>NearNow</span>
+          <img src="/logo_chico_nearnow.png" alt="Logo Chico NearNow" />
+          <img
+            class="min-w-46 -ml-4"
+            src="/logo_largo_nearnow.png"
+            alt="Logo Largo NearNow"
+          />
         </div>
       </div>
     </nav>
