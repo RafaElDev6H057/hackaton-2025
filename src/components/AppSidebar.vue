@@ -1,60 +1,59 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted } from "vue";
 
 defineProps<{
-  open: boolean
-}>()
+  open: boolean;
+}>();
 
 defineEmits<{
-  close: []
-}>()
+  close: [];
+}>();
 
 const menuItems = ref([
-  { id: 'inicio', title: 'Inicio', icon: '🏠' },
-  { id: 'eventos', title: 'Eventos', icon: '🎉' },
-  { id: 'mapa', title: 'Mapa', icon: '🗺️' },
-  { id: 'comunidad', title: 'Comentarios', icon: '💬' },
-  { id: 'escaneo', title: 'Reservar', icon: '📱' },
-  { id: 'logros', title: 'Logros', icon: '🏆' }
-])
+  { id: "inicio", title: "Inicio", icon: "🏠" },
+  { id: "eventos", title: "Eventos", icon: "🎉" },
+  { id: "mapa", title: "Mapa", icon: "🗺️" },
+  { id: "escaneo", title: "Reservar", icon: "📱" },
+  { id: "comunidad", title: "Comentarios", icon: "💬" },
+]);
 
-const activeSection = ref('inicio')
+const activeSection = ref("inicio");
 
 const scrollToSection = (sectionId: string) => {
-  const element = document.getElementById(sectionId)
+  const element = document.getElementById(sectionId);
   if (element) {
-    element.scrollIntoView({ behavior: 'smooth' })
-    activeSection.value = sectionId
+    element.scrollIntoView({ behavior: "smooth" });
+    activeSection.value = sectionId;
   }
-}
+};
 
 onMounted(() => {
   // Observar secciones para actualizar el menú activo
   const observer = new IntersectionObserver(
     (entries) => {
-      entries.forEach(entry => {
+      entries.forEach((entry) => {
         if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
-          activeSection.value = entry.target.id
+          activeSection.value = entry.target.id;
         }
-      })
+      });
     },
     { threshold: 0.5 }
-  )
+  );
 
-  menuItems.value.forEach(item => {
-    const element = document.getElementById(item.id)
+  menuItems.value.forEach((item) => {
+    const element = document.getElementById(item.id);
     if (element) {
-      observer.observe(element)
+      observer.observe(element);
     }
-  })
-})
+  });
+});
 </script>
 
 <template>
   <aside class="sidebar" :class="{ 'sidebar-open': open }">
     <div class="sidebar-header">
       <h3>Navegación</h3>
-      <button 
+      <button
         class="close-btn"
         @click="$emit('close')"
         aria-label="Cerrar menú"
@@ -62,16 +61,16 @@ onMounted(() => {
         ×
       </button>
     </div>
-    
+
     <nav class="sidebar-nav">
       <ul class="menu-list">
-        <li 
-          v-for="item in menuItems" 
+        <li
+          v-for="item in menuItems"
           :key="item.id"
           class="menu-item"
           :class="{ active: activeSection === item.id }"
         >
-          <a 
+          <a
             href="#"
             @click.prevent="scrollToSection(item.id)"
             class="menu-link"
@@ -82,8 +81,8 @@ onMounted(() => {
         </li>
       </ul>
     </nav>
-    
-    <div class="sidebar-footer">
+
+    <!-- <div class="sidebar-footer">
       <div class="user-info">
         <div class="user-avatar">
           <span>👤</span>
@@ -93,7 +92,7 @@ onMounted(() => {
           <p class="user-level">Nivel 1</p>
         </div>
       </div>
-    </div>
+    </div> -->
   </aside>
 </template>
 
@@ -239,7 +238,7 @@ onMounted(() => {
     width: 100%;
     left: -100%;
   }
-  
+
   .sidebar-open {
     left: 0;
   }

@@ -1,6 +1,26 @@
 <template>
   <div class="map-container relative">
     <div
+      class="absolute top-4 left-16 z-[1000] bg-white rounded-lg shadow-md px-4 py-2 flex items-center space-x-2"
+    >
+      <label for="categoryFilter" class="font-semibold text-gray-700"
+        >Categoría:</label
+      >
+      <select
+        id="categoryFilter"
+        v-model="selectedCategory"
+        class="px-2 py-1 border border-gray-300 rounded"
+      >
+        <option value="">Todas</option>
+        <option value="concierto">Concierto</option>
+        <option value="deporte">Deporte</option>
+        <option value="cultural">Cultural</option>
+        <option value="gastronomia">Gastronomía</option>
+        <option value="otros">Otros</option>
+      </select>
+    </div>
+
+    <div
       ref="mapElement"
       class="w-full h-[500px] rounded-xl shadow-xl border border-gray-300"
     ></div>
@@ -232,6 +252,8 @@ const userLocationMarker = ref(null);
 const showEventsPanel = ref(false);
 const eventMarkers = ref([]);
 
+const selectedCategory = ref(""); // NUEVO: filtro de categoría
+
 // Colores por categoría
 const categoryColors = {
   concierto: "bg-red-500",
@@ -240,6 +262,12 @@ const categoryColors = {
   gastronomia: "bg-green-500",
   otros: "bg-purple-500",
 };
+
+function getFilteredEvents() {
+  return selectedCategory.value
+    ? events.value.filter((ev) => ev.category === selectedCategory.value)
+    : events.value;
+}
 
 // Datos de prueba para eventos
 const events = ref([]);
@@ -388,15 +416,16 @@ const categorySVGs = {
 
 // Función para añadir eventos al mapa
 const addEventsToMap = () => {
+  if (!map.value) return;
+
   // Limpiar marcadores existentes
   eventMarkers.value.forEach((marker) => {
     map.value.removeLayer(marker);
   });
   eventMarkers.value = [];
 
-  // Añadir cada evento como marcador
-  events.value.forEach((event) => {
-    // Crear icono personalizado según categoría
+  // Usar eventos filtrados
+  getFilteredEvents().forEach((event) => {
     const eventIcon = L.divIcon({
       className: "event-marker",
       html: `
@@ -416,10 +445,8 @@ const addEventsToMap = () => {
       popupAnchor: [0, -32],
     });
 
-    // Selecciona el SVG según la categoría
     const svgIcon = categorySVGs[event.category] || categorySVGs["otros"];
 
-    // --- CORRECCIÓN: declarar el marcador con const ---
     const eventMarker = L.marker(
       [event.coordinates.lat, event.coordinates.lng],
       {
@@ -458,16 +485,18 @@ const addEventsToMap = () => {
       </div>
     `);
 
-    // Guardar referencia al marcador
     eventMarkers.value.push(eventMarker);
 
-    // Evento al hacer clic en el marcador
     eventMarker.on("click", () => {
       emit("event-selected", event);
     });
   });
 };
 
+// Watch para refrescar marcadores cuando cambia el filtro o los eventos
+watch([selectedCategory, events], () => {
+  addEventsToMap();
+});
 // Función para volar a un evento
 const flyToEvent = (event) => {
   map.value.flyTo([event.coordinates.lat, event.coordinates.lng], 16, {
