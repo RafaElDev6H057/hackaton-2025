@@ -1,28 +1,40 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref } from "vue";
+import AddressForm from "../components/AddressForm.vue";
 
-const mapContainer = ref<HTMLElement>()
+const mapContainer = ref<HTMLElement>();
 </script>
 
 <template>
   <section class="section" role="region" aria-labelledby="mapaTitle">
     <div class="container">
       <div class="section-header">
-        <img src="https://images.unsplash.com/photo-1467269204594-9661b134dd2b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Mapa de experiencias" />
+        <img
+          src="https://images.unsplash.com/photo-1467269204594-9661b134dd2b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+          alt="Mapa de experiencias"
+        />
         <h2 id="mapaTitle">Mapa de Experiencias</h2>
         <p>Descubre lugares cercanos y eventos disponibles en tu área.</p>
       </div>
-      
-      <div class="map-container" ref="mapContainer">
-        <div class="map-placeholder">
+
+      <div class="max-w-6xl mx-auto" ref="mapContainer">
+        <!-- <div class="map-placeholder">
           <h3>Mapa Interactivo</h3>
-          <p>Aquí se mostraría un mapa interactivo con los eventos disponibles en tu zona</p>
-        </div>
+          <p>
+            Aquí se mostraría un mapa interactivo con los eventos disponibles en
+            tu zona
+          </p>
+        </div> -->
+        <AddressForm />
       </div>
-      
+
       <div class="features-grid">
         <div class="card">
-          <img class="card-img" src="https://images.unsplash.com/photo-1527631746610-bca00a040d60?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Lugares destacados" />
+          <img
+            class="card-img"
+            src="https://images.unsplash.com/photo-1527631746610-bca00a040d60?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+            alt="Lugares destacados"
+          />
           <h3>Lugares Destacados</h3>
           <ul class="featured-locations">
             <li>Cerro de la Bufa - Eventos culturales disponibles</li>
@@ -31,7 +43,11 @@ const mapContainer = ref<HTMLElement>()
           </ul>
         </div>
         <div class="card">
-          <img class="card-img" src="https://images.unsplash.com/photo-1606787366850-de6330128bfc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Eventos cercanos" />
+          <img
+            class="card-img"
+            src="https://images.unsplash.com/photo-1606787366850-de6330128bfc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+            alt="Eventos cercanos"
+          />
           <h3>Eventos Cercanos</h3>
           <ul class="nearby-events">
             <li>Festival de Música - Este fin de semana</li>
@@ -82,7 +98,7 @@ const mapContainer = ref<HTMLElement>()
   border-radius: 1rem;
   position: relative;
   margin-bottom: 2rem;
-  background-image: url('https://images.unsplash.com/photo-1574629810360-7efbbe195018?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1493&q=80');
+  background-image: url("https://images.unsplash.com/photo-1574629810360-7efbbe195018?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1493&q=80");
   background-size: cover;
   background-position: center;
   display: flex;
@@ -166,7 +182,7 @@ const mapContainer = ref<HTMLElement>()
   .map-container {
     height: 300px;
   }
-  
+
   .map-placeholder {
     padding: 1.5rem;
   }

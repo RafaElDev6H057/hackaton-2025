@@ -1,420 +1,288 @@
-<script setup lang="ts">
-import { ref } from 'vue'
-import { useEvents } from '../composables/useEvents'
+<script setup>
+import { ref } from "vue";
+import { useEvents } from "../composables/useEvents";
 
-const { events } = useEvents()
-const showModal = ref(false)
-const scanResult = ref(false)
-const selectedEvent = ref<any>(null)
+const { events } = useEvents();
+const showModal = ref(false);
+const scanResult = ref(false);
+const selectedEvent = ref(null);
 const reservationData = ref({
-  name: '',
-  email: '',
-  phone: '',
-  attendees: 1
-})
+  name: "",
+  email: "",
+  phone: "",
+  attendees: 1,
+});
 
 const openScanModal = () => {
-  showModal.value = true
-  scanResult.value = false
-  selectedEvent.value = null
-}
+  showModal.value = true;
+  scanResult.value = false;
+  selectedEvent.value = null;
+};
 
 const closeScanModal = () => {
-  showModal.value = false
-  scanResult.value = false
-  selectedEvent.value = null
+  showModal.value = false;
+  scanResult.value = false;
+  selectedEvent.value = null;
   reservationData.value = {
-    name: '',
-    email: '',
-    phone: '',
-    attendees: 1
-  }
-}
+    name: "",
+    email: "",
+    phone: "",
+    attendees: 1,
+  };
+};
 
 const simulateScan = () => {
   // Simular escaneo de QR de un evento
-  const randomEvent = events.value[Math.floor(Math.random() * events.value.length)]
-  selectedEvent.value = randomEvent
-  scanResult.value = true
-}
+  const randomEvent =
+    events.value[Math.floor(Math.random() * events.value.length)];
+  selectedEvent.value = randomEvent;
+  scanResult.value = true;
+};
 
 const makeReservation = () => {
-  if (!reservationData.value.name || !reservationData.value.email || !reservationData.value.phone) {
-    alert('Por favor completa todos los campos')
-    return
+  if (
+    !reservationData.value.name ||
+    !reservationData.value.email ||
+    !reservationData.value.phone
+  ) {
+    alert("Por favor completa todos los campos");
+    return;
   }
-  
-  alert(`¡Reservación confirmada para ${selectedEvent.value.title}!\nNombre: ${reservationData.value.name}\nAsistentes: ${reservationData.value.attendees}`)
-  closeScanModal()
-}
+
+  alert(
+    `¡Reservación confirmada para ${selectedEvent.value.title}!\nNombre: ${reservationData.value.name}\nAsistentes: ${reservationData.value.attendees}`
+  );
+  closeScanModal();
+};
 
 const features = ref([
   {
     id: 1,
-    title: 'Eventos Culturales',
-    description: 'Escanea códigos QR para reservar tu lugar en festivales, conciertos y exposiciones.',
-    image: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80'
+    title: "Eventos Culturales",
+    description:
+      "Escanea códigos QR para reservar tu lugar en festivales, conciertos y exposiciones.",
+    image:
+      "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
   },
   {
     id: 2,
-    title: 'Tours y Experiencias',
-    description: 'Reserva tours guiados y experiencias únicas escaneando el código QR del lugar.',
-    image: 'https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80'
+    title: "Tours y Experiencias",
+    description:
+      "Reserva tours guiados y experiencias únicas escaneando el código QR del lugar.",
+    image:
+      "https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
   },
   {
     id: 3,
-    title: 'Actividades Gastronómicas',
-    description: 'Reserva tu mesa en eventos gastronómicos y cenas especiales.',
-    image: 'https://images.unsplash.com/photo-1631729371254-42c2892f0e6e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80'
-  }
-])
+    title: "Actividades Gastronómicas",
+    description: "Reserva tu mesa en eventos gastronómicos y cenas especiales.",
+    image:
+      "https://images.unsplash.com/photo-1631729371254-42c2892f0e6e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+  },
+]);
 </script>
 
 <template>
-  <section class="section" role="region" aria-labelledby="escaneoTitle">
-    <div class="container">
-      <div class="section-header">
-        <img src="https://images.unsplash.com/photo-1603302576837-37561b2e2302?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1468&q=80" alt="Escaneo de códigos QR para reservaciones" />
-        <h2 id="escaneoTitle">Reservaciones con Código QR</h2>
-        <p>Escanea códigos QR para hacer reservaciones instantáneas en eventos, tours y experiencias. ¡Rápido y fácil!</p>
+  <section
+    class="py-16 bg-gray-50"
+    role="region"
+    aria-labelledby="escaneoTitle"
+  >
+    <div class="max-w-[1200px] mx-auto px-4">
+      <!-- Encabezado de sección -->
+      <div class="text-center mb-12">
+        <img
+          src="https://images.unsplash.com/photo-1603302576837-37561b2e2302?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1468&q=80"
+          alt="Escaneo de códigos QR para reservaciones"
+          class="max-h-[200px] object-cover mb-6 shadow-lg rounded-xl w-full max-w-[600px] mx-auto"
+        />
+        <h2 id="escaneoTitle" class="text-3xl font-bold text-gray-900 mb-2">
+          Reservaciones con Código QR
+        </h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">
+          Escanea códigos QR para hacer reservaciones instantáneas en eventos,
+          tours y experiencias. ¡Rápido y fácil!
+        </p>
       </div>
-      
-      <div class="features-grid">
-        <div 
-          v-for="feature in features" 
+
+      <!-- Grid de características -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <div
+          v-for="feature in features"
           :key="feature.id"
-          class="card"
+          class="bg-white p-6 rounded-xl shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_12px_24px_rgba(37,99,235,0.3)]"
         >
-          <img :src="feature.image" :alt="feature.title" class="card-img" />
-          <h3>{{ feature.title }}</h3>
-          <p>{{ feature.description }}</p>
+          <img
+            :src="feature.image"
+            :alt="feature.title"
+            class="w-full h-48 object-cover mb-4 rounded-lg"
+          />
+          <h3 class="text-xl font-bold text-blue-800 mb-2">
+            {{ feature.title }}
+          </h3>
+          <p class="text-gray-600">
+            {{ feature.description }}
+          </p>
         </div>
       </div>
-      
-      <div class="scan-button-container">
-        <button class="btn-primary" @click="openScanModal">
+
+      <!-- Botón de escaneo -->
+      <div class="text-center">
+        <button
+          class="bg-blue-600 hover:bg-blue-800 text-white font-bold py-3 px-8 rounded-xl shadow-[0_6px_15px_rgba(37,99,235,0.5)] transition-all duration-300 hover:scale-105"
+          @click="openScanModal"
+        >
           Escanear QR para Reservar
         </button>
       </div>
     </div>
-    
+
     <!-- Modal de escaneo y reservación -->
-    <div v-if="showModal" class="scan-modal" @click="closeScanModal">
-      <div class="scan-modal-content" @click.stop>
-        <h3>Escaneo de Código QR</h3>
-        
-        <div v-if="!scanResult" class="scanner-view">
-          <div class="qr-placeholder">
-            <img 
-              src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://nearnow.example.com/event/festival-musica" 
-              alt="Código QR de ejemplo" 
-            />
+    <div
+      v-if="showModal"
+      class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4"
+      @click="closeScanModal"
+    >
+      <div
+        class="bg-white rounded-xl shadow-lg max-w-[500px] w-full max-h-[90vh] overflow-y-auto"
+        @click.stop
+      >
+        <div class="p-6">
+          <h3 class="text-xl font-bold text-blue-600 mb-4">
+            Escaneo de Código QR
+          </h3>
+
+          <div v-if="!scanResult" class="mb-6">
+            <div class="bg-gray-50 p-4 rounded-lg inline-block my-2">
+              <img
+                src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://nearnow.example.com/event/festival-musica"
+                alt="Código QR de ejemplo"
+                class="w-48 h-48 rounded-lg mx-auto"
+              />
+            </div>
+            <p class="text-gray-600 mb-4">
+              Apunta tu cámara al código QR del evento para hacer tu reservación
+            </p>
+            <button
+              class="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-6 rounded-xl shadow-[0_6px_15px_rgba(37,99,235,0.5)] transition-all duration-300 hover:scale-105"
+              @click="simulateScan"
+            >
+              Simular Escaneo de Evento
+            </button>
           </div>
-          <p>Apunta tu cámara al código QR del evento para hacer tu reservación</p>
-          <button class="btn-primary" @click="simulateScan">
-            Simular Escaneo de Evento
+
+          <div v-else class="text-left">
+            <h4 class="text-lg font-bold text-blue-600 mb-4 text-center">
+              {{ selectedEvent.title }}
+            </h4>
+            <div class="bg-gray-50 p-4 rounded-lg mb-6">
+              <p class="text-gray-800 mb-1">
+                <span class="font-semibold">Fecha:</span>
+                {{ selectedEvent.date }}
+              </p>
+              <p class="text-gray-800 mb-1">
+                <span class="font-semibold">Hora:</span>
+                {{ selectedEvent.time }}
+              </p>
+              <p class="text-gray-800 mb-1">
+                <span class="font-semibold">Ubicación:</span>
+                {{ selectedEvent.location }}
+              </p>
+              <p class="text-gray-800">
+                <span class="font-semibold">Categoría:</span>
+                {{ selectedEvent.category }}
+              </p>
+            </div>
+
+            <form @submit.prevent="makeReservation" class="space-y-4">
+              <div>
+                <label
+                  for="reservationName"
+                  class="block font-semibold text-gray-700 mb-1"
+                >
+                  Nombre completo
+                </label>
+                <input
+                  type="text"
+                  id="reservationName"
+                  v-model="reservationData.name"
+                  placeholder="Tu nombre completo"
+                  required
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                />
+              </div>
+
+              <div>
+                <label
+                  for="reservationEmail"
+                  class="block font-semibold text-gray-700 mb-1"
+                >
+                  Email
+                </label>
+                <input
+                  type="email"
+                  id="reservationEmail"
+                  v-model="reservationData.email"
+                  placeholder="tu@email.com"
+                  required
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                />
+              </div>
+
+              <div>
+                <label
+                  for="reservationPhone"
+                  class="block font-semibold text-gray-700 mb-1"
+                >
+                  Teléfono
+                </label>
+                <input
+                  type="tel"
+                  id="reservationPhone"
+                  v-model="reservationData.phone"
+                  placeholder="123-456-7890"
+                  required
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                />
+              </div>
+
+              <div>
+                <label
+                  for="attendees"
+                  class="block font-semibold text-gray-700 mb-1"
+                >
+                  Número de asistentes
+                </label>
+                <select
+                  id="attendees"
+                  v-model="reservationData.attendees"
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                >
+                  <option value="1">1 persona</option>
+                  <option value="2">2 personas</option>
+                  <option value="3">3 personas</option>
+                  <option value="4">4 personas</option>
+                  <option value="5">5+ personas</option>
+                </select>
+              </div>
+
+              <button
+                type="submit"
+                class="bg-blue-600 hover:bg-blue-800 text-white font-bold py-3 px-8 rounded-xl shadow-[0_6px_15px_rgba(37,99,235,0.5)] transition-all duration-300 hover:scale-105 w-full mt-4"
+              >
+                Confirmar Reservación
+              </button>
+            </form>
+          </div>
+
+          <button
+            class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-6 rounded-lg transition-colors duration-300 mt-6 w-full"
+            @click="closeScanModal"
+          >
+            Cerrar
           </button>
         </div>
-        
-        <div v-else class="reservation-form">
-          <h4>{{ selectedEvent.title }}</h4>
-          <div class="event-details">
-            <p><strong>Fecha:</strong> {{ selectedEvent.date }}</p>
-            <p><strong>Hora:</strong> {{ selectedEvent.time }}</p>
-            <p><strong>Ubicación:</strong> {{ selectedEvent.location }}</p>
-            <p><strong>Categoría:</strong> {{ selectedEvent.category }}</p>
-          </div>
-          
-          <form @submit.prevent="makeReservation" class="reservation-inputs">
-            <div class="form-group">
-              <label for="reservationName">Nombre completo</label>
-              <input 
-                type="text" 
-                id="reservationName" 
-                v-model="reservationData.name"
-                placeholder="Tu nombre completo" 
-                required 
-              />
-            </div>
-            
-            <div class="form-group">
-              <label for="reservationEmail">Email</label>
-              <input 
-                type="email" 
-                id="reservationEmail" 
-                v-model="reservationData.email"
-                placeholder="tu@email.com" 
-                required 
-              />
-            </div>
-            
-            <div class="form-group">
-              <label for="reservationPhone">Teléfono</label>
-              <input 
-                type="tel" 
-                id="reservationPhone" 
-                v-model="reservationData.phone"
-                placeholder="123-456-7890" 
-                required 
-              />
-            </div>
-            
-            <div class="form-group">
-              <label for="attendees">Número de asistentes</label>
-              <select id="attendees" v-model="reservationData.attendees">
-                <option value="1">1 persona</option>
-                <option value="2">2 personas</option>
-                <option value="3">3 personas</option>
-                <option value="4">4 personas</option>
-                <option value="5">5+ personas</option>
-              </select>
-            </div>
-            
-            <button type="submit" class="btn-primary">
-              Confirmar Reservación
-            </button>
-          </form>
-        </div>
-        
-        <button class="btn-secondary" @click="closeScanModal">
-          Cerrar
-        </button>
       </div>
     </div>
   </section>
 </template>
-
-<style scoped>
-.section {
-  padding: 4rem 0;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
-}
-
-.section-header {
-  text-align: center;
-  margin-bottom: 3rem;
-}
-
-.section-header img {
-  max-height: 200px;
-  object-fit: cover;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  border-radius: 0.5rem;
-  width: 100%;
-  max-width: 600px;
-}
-
-.section-header h2 {
-  font-size: 1.75rem;
-  color: #111827;
-  margin-bottom: 0.5rem;
-}
-
-.section-header p {
-  font-size: 1rem;
-  color: #6b7280;
-}
-
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-  margin-bottom: 3rem;
-}
-
-.card {
-  background: #f9fafb;
-  border-radius: 0.75rem;
-  padding: 2rem;
-  box-shadow: 0 4px 8px rgb(0 0 0 / 0.05);
-  transition: transform 0.3s ease;
-  text-align: center;
-}
-
-.card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 24px rgb(37 99 235 / 0.3);
-}
-
-.card-img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  margin-bottom: 1.5rem;
-  border-radius: 0.5rem;
-}
-
-.card h3 {
-  margin: 0 0 1rem 0;
-  font-size: 1.5rem;
-  color: #1e40af;
-}
-
-.card p {
-  margin: 0;
-  color: #6b7280;
-}
-
-.scan-button-container {
-  text-align: center;
-}
-
-.btn-primary {
-  background-color: #2563eb;
-  border: none;
-  color: white;
-  font-weight: 700;
-  font-size: 1.125rem;
-  padding: 0.75rem 2rem;
-  border-radius: 0.75rem;
-  cursor: pointer;
-  box-shadow: 0 6px 15px rgba(37, 99, 235, 0.5);
-  transition: all 0.3s ease;
-}
-
-.btn-primary:hover {
-  background-color: #1e40af;
-  transform: scale(1.05);
-}
-
-.btn-secondary {
-  background-color: #6b7280;
-  border: none;
-  color: white;
-  font-weight: 600;
-  font-size: 1rem;
-  padding: 0.5rem 1.5rem;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  margin-top: 1rem;
-  transition: background-color 0.3s ease;
-}
-
-.btn-secondary:hover {
-  background-color: #4b5563;
-}
-
-.scan-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.scan-modal-content {
-  background: white;
-  border-radius: 1rem;
-  padding: 2rem;
-  max-width: 500px;
-  width: 90%;
-  max-height: 90vh;
-  overflow-y: auto;
-  text-align: center;
-  box-shadow: 0 10px 30px rgb(0 0 0 / 0.15);
-}
-
-.scan-modal-content h3 {
-  margin-top: 0;
-  margin-bottom: 1rem;
-  font-weight: 700;
-  color: #2563eb;
-}
-
-.scanner-view {
-  margin-bottom: 2rem;
-}
-
-.qr-placeholder {
-  margin: 1rem auto;
-  padding: 1rem;
-  background: #f9fafb;
-  border-radius: 0.5rem;
-  display: inline-block;
-}
-
-.qr-placeholder img {
-  width: 200px;
-  height: 200px;
-  border-radius: 0.5rem;
-}
-
-.reservation-form {
-  text-align: left;
-  margin-bottom: 2rem;
-}
-
-.reservation-form h4 {
-  color: #2563eb;
-  margin-top: 0;
-  margin-bottom: 1rem;
-  text-align: center;
-}
-
-.event-details {
-  background: #f9fafb;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.event-details p {
-  margin: 0.25rem 0;
-  color: #374151;
-  font-size: 0.9rem;
-}
-
-.reservation-inputs {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-group label {
-  font-weight: 600;
-  color: #374151;
-  margin-bottom: 0.5rem;
-}
-
-.form-group input,
-.form-group select {
-  padding: 0.75rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-}
-
-.form-group input:focus,
-.form-group select:focus {
-  outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-}
-
-@media (max-width: 768px) {
-  .section-header h2 {
-    font-size: 1.5rem;
-  }
-  
-  .scan-modal-content {
-    margin: 1rem;
-    padding: 1.5rem;
-  }
-}
-</style>
