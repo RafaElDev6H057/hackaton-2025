@@ -35,7 +35,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <header class="sticky top-0 bg-white z-50 shadow-md">
+  <header class="sticky top-0 bg-white z-[9999] shadow-md">
     <nav
       class="flex items-center justify-between h-19 max-w-[1200px] mx-auto px-4"
     >
