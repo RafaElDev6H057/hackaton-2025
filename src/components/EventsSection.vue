@@ -2,7 +2,7 @@
 import { ref, computed } from "vue";
 import axios from "axios";
 import { useEvents } from "../composables/useEvents";
-import LeafletMap from "./LeafletMap.vue";
+import LeafletMapSimple from "./LeafletMapSimple.vue";
 
 const { events, addEvent, eventFilter, filteredEvents, renderCalendar } =
   useEvents();
@@ -291,7 +291,7 @@ const calendarData = computed(() => renderCalendar());
           <label class="block font-semibold text-gray-700 mb-2">
             Selecciona la ubicación en el mapa
           </label>
-          <LeafletMap
+          <LeafletMapSimple
             style="height: 400px; width: 100%; border-radius: 12px"
             :initial-position="{
               lat: 22.762395711851127,
