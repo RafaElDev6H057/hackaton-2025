@@ -9,24 +9,23 @@ const scrollToMap = () => {
 
 <template>
   <section
-    class="relative overflow-hidden bg-gradient-to-br from-[#4f46e5] to-[#3b82f6] text-white py-24 px-4 text-center"
+    class="relative overflow-hidden bg-black/90 text-white py-24 px-4 text-center h-screen"
     role="region"
     aria-label="Sección principal"
   >
     <!-- Fondo con imagen y opacidad -->
     <div
-      class="absolute inset-0 bg-cover bg-center"
+      class="absolute inset-0 bg-cover bg-center h-screen animated-zoom"
       :style="{
-        backgroundImage:
-          'url(https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80)',
+        backgroundImage: 'url(/hero_zacatecas_3.webp)',
         opacity: '0.55',
-        height: '',
+        height: '100%',
       }"
     ></div>
 
-    <div class="relative z-10 max-w-[1200px] mx-auto">
+    <div class="relative z-10 max-w-[1200px] mx-auto pt-16">
       <h1
-        class="text-5xl md:text-6xl font-extrabold leading-[1.1] mb-4 text-white"
+        class="text-5xl md:text-6xl font-extrabold leading-[1.1] mb-4 text-white!"
       >
         Explora tu mundo,<br />un escaneo a la vez.
       </h1>
@@ -47,3 +46,19 @@ const scrollToMap = () => {
     </div>
   </section>
 </template>
+
+<style scoped>
+@keyframes zoomInOut {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.animated-zoom {
+  animation: zoomInOut 12s ease-in-out infinite;
+}
+</style>
