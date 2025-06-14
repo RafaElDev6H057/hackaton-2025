@@ -10,6 +10,7 @@ const mapContainer = ref<HTMLElement>();
     <div class="container">
       <div class="section-header">
         <img
+          class="min-w-full"
           src="https://images.unsplash.com/photo-1467269204594-9661b134dd2b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
           alt="Mapa de experiencias"
         />
@@ -19,7 +20,7 @@ const mapContainer = ref<HTMLElement>();
         </p>
       </div>
 
-      <div class="max-w-6xl mx-auto" ref="mapContainer">
+      <div class="max-w-6xl mx-auto mb-8" ref="mapContainer">
         <!-- <div class="map-placeholder">
           <h3>Mapa Interactivo</h3>
           <p>

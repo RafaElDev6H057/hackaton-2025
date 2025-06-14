@@ -1,99 +1,105 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref } from "vue";
 
 const testimonials = ref([
   {
     id: 1,
-    name: 'Ana Martínez',
-    avatar: 'https://randomuser.me/api/portraits/women/32.jpg',
+    name: "Ana Martínez",
+    avatar: "https://randomuser.me/api/portraits/women/32.jpg",
     rating: 5,
-    text: 'Gracias a NearNow descubrí el Restaurante La Minera y con el código QR obtuve un 2x1 en platos principales. La comida estuvo deliciosa y el servicio excelente. ¡Recomendado!'
+    text: "Gracias a NearNow descubrí el Restaurante La Minera y con el código QR obtuve un 2x1 en platos principales. La comida estuvo deliciosa y el servicio excelente. ¡Recomendado!",
   },
   {
     id: 2,
-    name: 'Carlos Rodríguez',
-    avatar: 'https://randomuser.me/api/portraits/men/45.jpg',
+    name: "Carlos Rodríguez",
+    avatar: "https://randomuser.me/api/portraits/men/45.jpg",
     rating: 4,
-    text: 'El sistema de misiones me motivó a visitar lugares que normalmente no hubiera considerado. La historia del Cerro de la Bufa que desbloqueé al escanear el código QR fue fascinante.'
+    text: "El sistema de misiones me motivó a visitar lugares que normalmente no hubiera considerado. La historia del Cerro de la Bufa que desbloqueé al escanear el código QR fue fascinante.",
   },
   {
     id: 3,
-    name: 'María González',
-    avatar: 'https://randomuser.me/api/portraits/women/68.jpg',
+    name: "María González",
+    avatar: "https://randomuser.me/api/portraits/women/68.jpg",
     rating: 5,
-    text: 'Conseguí el descuento del 15% en el Hotel Boutique después de completar tres misiones culturales. El hotel es encantador y la ubicación perfecta para explorar el centro histórico.'
-  }
-])
+    text: "Conseguí el descuento del 15% en el Hotel Boutique después de completar tres misiones culturales. El hotel es encantador y la ubicación perfecta para explorar el centro histórico.",
+  },
+]);
 
 const newComment = ref({
-  text: '',
-  rating: 0
-})
+  text: "",
+  rating: 0,
+});
 
 const submitComment = () => {
   if (!newComment.value.text || newComment.value.rating === 0) {
-    alert('Por favor completa todos los campos')
-    return
+    alert("Por favor completa todos los campos");
+    return;
   }
-  
+
   // Aquí iría la lógica para enviar el comentario
-  alert('¡Gracias por tu comentario!')
-  
+  alert("¡Gracias por tu comentario!");
+
   // Reset form
   newComment.value = {
-    text: '',
-    rating: 0
-  }
-}
+    text: "",
+    rating: 0,
+  };
+};
 
 const setRating = (rating: number) => {
-  newComment.value.rating = rating
-}
+  newComment.value.rating = rating;
+};
 
 const getStars = (rating: number) => {
-  return '★'.repeat(rating) + '☆'.repeat(5 - rating)
-}
+  return "★".repeat(rating) + "☆".repeat(5 - rating);
+};
 </script>
 
 <template>
   <section class="section" role="region" aria-labelledby="comunidadTitle">
     <div class="container">
       <div class="section-header">
-        <img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Comunidad y experiencias" />
+        <img
+          class="min-w-full"
+          src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+          alt="Comunidad y experiencias"
+        />
         <h2 id="comunidadTitle">Experiencias de la Comunidad</h2>
         <p>Lo que otros viajeros dicen sobre sus experiencias con NearNow.</p>
       </div>
-      
+
       <div class="testimonials-list">
-        <div 
-          v-for="testimonial in testimonials" 
+        <div
+          v-for="testimonial in testimonials"
           :key="testimonial.id"
           class="testimonial"
         >
-          <img 
-            :src="testimonial.avatar" 
+          <img
+            :src="testimonial.avatar"
             :alt="testimonial.name"
-            class="testimonial-avatar" 
+            class="testimonial-avatar"
           />
           <div class="testimonial-content">
             <div class="testimonial-author">{{ testimonial.name }}</div>
-            <div class="testimonial-rating">{{ getStars(testimonial.rating) }}</div>
+            <div class="testimonial-rating">
+              {{ getStars(testimonial.rating) }}
+            </div>
             <p class="testimonial-text">{{ testimonial.text }}</p>
           </div>
         </div>
       </div>
-      
+
       <div class="comment-form">
         <h4>Comparte tu experiencia</h4>
-        <textarea 
+        <textarea
           v-model="newComment.text"
           placeholder="Cuéntanos sobre tu experiencia con NearNow..."
         ></textarea>
         <div class="rating-select">
           <span>Calificación:</span>
           <div class="stars">
-            <button 
-              v-for="star in 5" 
+            <button
+              v-for="star in 5"
               :key="star"
               type="button"
               class="star-btn"
@@ -274,15 +280,15 @@ const getStars = (rating: number) => {
     align-items: center;
     text-align: center;
   }
-  
+
   .testimonial-avatar {
     align-self: center;
   }
-  
+
   .section-header h2 {
     font-size: 1.5rem;
   }
-  
+
   .rating-select {
     flex-direction: column;
     align-items: flex-start;

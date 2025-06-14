@@ -308,7 +308,7 @@ const calendarData = computed(() => renderCalendar());
           Calendario de Eventos
         </h3>
         <div
-          class="max-w-[700px] rounded-xl shadow-md p-4 bg-gray-50"
+          class="max-w-[1200px] rounded-xl shadow-md p-4 bg-gray-50 mx-auto"
           v-html="calendarData"
         ></div>
       </div>
