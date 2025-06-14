@@ -1,6 +1,26 @@
 <template>
   <div class="map-container relative">
-    <div
+    <!-- Botón para abrir el modal de categorías -->
+    <button
+      @click="showCategoryModal = true"
+      class="absolute top-4 left-16 z-[1000] bg-white rounded-lg shadow-md px-4 py-2 flex items-center space-x-2 font-semibold text-gray-700 hover:bg-gray-100 transition"
+    >
+      <svg
+        class="w-5 h-5 mr-2 text-blue-600"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M3 4a1 1 0 011-1h16a1 1 0 011 1v16a1 1 0 01-1 1H4a1 1 0 01-1-1V4z"
+        />
+      </svg>
+      Filtrar por categoría
+    </button>
+    <!-- <div
       class="absolute top-4 left-16 z-[1000] bg-white rounded-lg shadow-md px-4 py-2 flex items-center space-x-2"
     >
       <label for="categoryFilter" class="font-semibold text-gray-700"
@@ -18,8 +38,61 @@
         <option value="gastronomia">Gastronomía</option>
         <option value="otros">Otros</option>
       </select>
+    </div> -->
+    <!-- Modal de categorías -->
+    <div
+      v-if="showCategoryModal"
+      class="fixed inset-0 z-[2000] flex items-center justify-center bg-black/60"
+    >
+      <div class="bg-white rounded-xl shadow-2xl p-8 max-w-3xl w-full relative">
+        <button
+          @click="showCategoryModal = false"
+          class="absolute top-3 right-3 text-2xl text-gray-400 hover:text-gray-700"
+        >
+          &times;
+        </button>
+        <h2 class="text-2xl font-bold mb-6 text-center text-blue-700">
+          Elige una categoría
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div
+            v-for="cat in categoryCards"
+            :key="cat.value"
+            @click="selectCategory(cat.value)"
+            class="cursor-pointer bg-gray-50 hover:bg-blue-50 rounded-lg shadow p-4 flex flex-col items-center transition border-2"
+            :class="
+              selectedCategory === cat.value
+                ? 'border-blue-600'
+                : 'border-transparent'
+            "
+          >
+            <img
+              :src="cat.img"
+              :alt="cat.title"
+              class="w-12 h-12 object-contain mb-3"
+            />
+            <h3 class="text-lg font-bold text-gray-800 mb-1">
+              {{ cat.title }}
+            </h3>
+            <p class="text-sm text-gray-600 text-center">{{ cat.desc }}</p>
+          </div>
+        </div>
+        <div class="mt-6 flex justify-center">
+          <button
+            @click="clearCategory"
+            class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded text-gray-700 mr-2"
+          >
+            Ver todas
+          </button>
+          <button
+            @click="showCategoryModal = false"
+            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"
+          >
+            Cerrar
+          </button>
+        </div>
+      </div>
     </div>
-
     <div
       ref="mapElement"
       class="w-full h-[500px] rounded-xl shadow-xl border border-gray-300"
@@ -178,28 +251,6 @@
           </div>
         </div>
       </div>
-
-      <!-- <div class="p-3 bg-gray-50 border-t border-gray-200">
-        <button
-          @click="addSampleEvent"
-          class="w-full py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg flex items-center justify-center"
-        >
-          <svg
-            class="w-5 h-5 mr-2"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-            />
-          </svg>
-          Añadir Evento de Prueba
-        </button>
-      </div> -->
     </div>
   </div>
 </template>
@@ -222,6 +273,49 @@ import CultureIcon from "./icons/CultureIcon.vue";
 import FoodIcon from "./icons/FoodIcon.vue";
 import MusicIcon from "./icons/MusicIcon.vue";
 import SportIcon from "./icons/SportIcon.vue";
+
+import concertImg from "../assets/concertImage.png";
+import cultureImg from "../assets/cultureImage.png";
+import foodImg from "../assets/foodImage.png";
+import sportImg from "../assets/sportImage.png";
+
+const showCategoryModal = ref(false);
+
+const categoryCards = [
+  {
+    value: "deporte",
+    title: "Deporte",
+    img: sportImg,
+    desc: "Eventos deportivos como partidos, torneos y actividades físicas para toda la familia.",
+  },
+  {
+    value: "cultural",
+    title: "Cultura",
+    img: cultureImg,
+    desc: "Disfruta de exposiciones, obras de teatro, festivales y actividades culturales.",
+  },
+  {
+    value: "concierto",
+    title: "Concierto",
+    img: concertImg,
+    desc: "Conciertos y presentaciones musicales de diferentes géneros y artistas.",
+  },
+  {
+    value: "gastronomia",
+    title: "Gastronomía",
+    img: foodImg,
+    desc: "Festivales, ferias y eventos culinarios para los amantes de la buena comida.",
+  },
+];
+
+function selectCategory(cat) {
+  selectedCategory.value = cat;
+  showCategoryModal.value = false;
+}
+function clearCategory() {
+  selectedCategory.value = "";
+  showCategoryModal.value = false;
+}
 
 // Configuración de iconos
 delete L.Icon.Default.prototype._getIconUrl;
